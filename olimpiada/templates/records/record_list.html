@@ -8,7 +8,7 @@
         <thead>
             <tr>
                 <th>Performance</th>
-                <th>Event</th>
+                <th>Discipline</th>
                 <th>Holder</th>
                 <th>Date</th>
                 <th>Place</th>
@@ -17,7 +17,7 @@
         {% for object in record_list %}
         <tr>
             <th> {{ object.performance }}</th>
-            <th> {{ object.event.name }} </th>
+            <th> {{ object.discipline.name }} </th>
             <th><a href="/records/{{object.pk}}">{{ object.holder.full_name_with_birthyear }}</a></th>
             <th> {{ object.record_date }}</th>
             <th> {{ object.place }}</th>

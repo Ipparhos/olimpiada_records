@@ -7,7 +7,7 @@ from django.views.generic import View, ListView, TemplateView, DetailView, Redir
 from django.utils.decorators import method_decorator
 
 from .forms import RecordForm#, UserCreationForm, UserLoginForm
-from .models import Record, Event
+from .models import Record, Discipline
 
 User= get_user_model()
 # Create your views here.
@@ -113,11 +113,11 @@ class RecordDeleteView(LoginRequiredMixin, DeleteView):
         return "/records/"
 
 
-def load_events(request):
+def load_disciplines(request):
     stadium_id = request.GET.get('stadium')
     print('stadium_id:', stadium_id)
-    events = Event.objects.filter(stadium_id=stadium_id).order_by('name')
-    return render(request, 'records/events_dropdown_list_options.html', {'events': events})
+    disciplines = Discipline.objects.filter(stadium_id=stadium_id).order_by('name')
+    return render(request, 'records/disciplines_dropdown_list_options.html', {'disciplines': disciplines})
 
 
 # from django.contrib.auth.views import LogoutView

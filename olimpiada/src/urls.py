@@ -21,7 +21,7 @@ from django.views.generic import TemplateView, RedirectView
 
 from records.views import (RecordListView, RecordDetailView, RecordRedirectView,
                            RecordRedirectToListView, RecordCreateView, RecordUpdateView,
-                           RecordDeleteView, load_events)#, register, user_login
+                           RecordDeleteView, load_disciplines)#, register, user_login
 
 
 urlpatterns = [
@@ -40,5 +40,5 @@ urlpatterns = [
     path('records/create/', RecordCreateView.as_view(), name='records-create'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
 
-    path('ajax/load-events/', load_events, name='ajax_load_events'),
+    path('ajax/load-disciplines/', load_disciplines, name='ajax_load_disciplines'),
 ]

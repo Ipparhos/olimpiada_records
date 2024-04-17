@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="post"  id="recordForm" data-event-url="{% url 'ajax_load_events' %}" >
+<form method="post"  id="recordForm" data-discipline-url="{% url 'ajax_load_disciplines' %}" >
   {% csrf_token %}
   {{ form.as_p }}
 
@@ -16,7 +16,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
     $("#id_stadium").change(function () {
-      var url = $("#recordForm").attr("data-event-url");  // get the url of the `load_cities` view
+      var url = $("#recordForm").attr("data-discipline-url");  // get the url of the `load_cities` view
       var stadiumId = $(this).val();  // get the selected country ID from the HTML input
 
       $.ajax({                       // initialize an AJAX request
@@ -25,7 +25,7 @@
           'stadium': stadiumId       // add the country id to the GET parameters
         },
         success: function (data) {   // `data` is the return of the `load_cities` view function
-          $("#id_event").html(data);  // replace the contents of the city input with the data that came from the server
+          $("#id_discipline").html(data);  // replace the contents of the city input with the data that came from the server
         }
       });
 

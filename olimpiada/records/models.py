@@ -7,10 +7,10 @@ from django.conf import settings
 User = settings.AUTH_USER_MODEL
 # USERNAME_REGEX = '^[a-zA-Z0-9_@.+-]'
 
-road_events = ['60m', '60m Hurdles', '100m', '100m Hurdles', '110m Hurdles', '200m', '400m', '400m Hurdles', '800m',
-               '1500m', '3000m', '3000m Steeplechase', '5000m', '10000m']
-field_events = ['Long Jump', 'Triple Jump', 'High Jump', 'Pole Vault', 'Javelin Throw', 'Shot Put',
-                'Hammer Throw', 'Discus Throw']
+road_disciplines = ['60m', '60m Hurdles', '100m', '100m Hurdles', '110m Hurdles', '200m', '400m', '400m Hurdles', '800m',
+                    '1500m', '3000m', '3000m Steeplechase', '5000m', '10000m']
+field_disciplines = ['Long Jump', 'Triple Jump', 'High Jump', 'Pole Vault', 'Javelin Throw', 'Shot Put',
+                     'Hammer Throw', 'Discus Throw']
 
 
 class Athlete(models.Model):
@@ -39,13 +39,13 @@ class Stadium(models.Model):
         return self.name
 
 
-class Event(models.Model):
+class Discipline(models.Model):
     stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE)
     name = models.CharField(max_length=25)
 
     @property
-    def event_type(self):
-        if self.name in road_events:
+    def discipline_type(self):
+        if self.name in road_disciplines:
             return 'road'
         else:
             return 'field'
@@ -77,7 +77,7 @@ class Record(models.Model):
     holder = models.ForeignKey(Athlete, blank=True, null=True, on_delete=models.SET_NULL)
     # description = models.TextField()
     age_group = models.ForeignKey(AgeGroup, blank=True, null=True, on_delete=models.SET_NULL)
-    event = models.ForeignKey(Event, blank=True, null=True, on_delete=models.SET_NULL)
+    discipline = models.ForeignKey(Discipline, blank=True, null=True, on_delete=models.SET_NULL)
     place = models.ForeignKey(Place, blank=True, null=True, on_delete=models.SET_NULL)
     stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
     performance = models.CharField(max_length=10, blank=False, null=True)
@@ -102,5 +102,5 @@ class Record(models.Model):
         ordering = ['performance', '-record_date']
         # verbose_name = ''  # How admin sees the name for single obj
         # verbose_name_plural = 'Records' # How admin sees the name for multiple objs
-        unique_together = [['holder', 'event', 'performance']]
+        unique_together = [['holder', 'discipline', 'performance']]
         db_table = 'Olimpiada records'

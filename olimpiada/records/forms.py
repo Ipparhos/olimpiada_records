@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db.models import Q
 
-from .models import Record, Event
+from .models import Record, Discipline
 import datetime
 
 User = get_user_model()
@@ -16,27 +16,27 @@ User = get_user_model()
 class RecordForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['event'].queryset = Event.objects.none()
+        self.fields['discipline'].queryset = Discipline.objects.none()
 
         if 'stadium' in self.data:
             try:
                 stadium_id = int(self.data.get('stadium'))
-                self.fields['event'].queryset = Event.objects.filter(stadium_id=stadium_id).order_by('id')
+                self.fields['discipline'].queryset = Discipline.objects.filter(stadium_id=stadium_id).order_by('id')
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
-            self.fields['event'].queryset = self.instance.stadium.event_set.order_by('id')
+            self.fields['discipline'].queryset = self.instance.stadium.discipline_set.order_by('id')
 
     def clean_performance(self):
-        event = self.cleaned_data.get('event')
-        print(event)
+        discipline = self.cleaned_data.get('discipline')
+        print(discipline)
         performance_value = self.cleaned_data.get('performance')
 
-        # Add logic to validate performance based on event
+        # Add logic to validate performance based on discipline
         # Example:
-        if event.event_type == 'road':
-            print(event.name)
-            print(event.event_type)
+        if discipline.discipline_type == 'road':
+            print(discipline.name)
+            print(discipline.discipline_type)
             # validate performance as duration
             # Example: You can use Django's DurationField to validate duration
             # You may need to import datetime.timedelta for duration calculation
@@ -60,7 +60,7 @@ class RecordForm(forms.ModelForm):
         else:
             # Validate performance as float
             try:
-                print(event.event_type)
+                print(discipline.discipline_type)
                 # Validate performance as float
                 float_value = float(performance_value)
                 # pass
@@ -74,7 +74,7 @@ class RecordForm(forms.ModelForm):
         fields = ['holder',
                   'age_group',
                   'stadium',
-                  'event',
+                  'discipline',
                   'performance',
                   'place',
                   'record_date', ]

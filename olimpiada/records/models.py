@@ -64,7 +64,7 @@ class AgeGroup(models.Model):
         return self.age_group
 
 
-class Place(models.Model):
+class Venue(models.Model):
     area = models.CharField(max_length=30)
     stadium_name = models.CharField(max_length=20)
 
@@ -78,7 +78,7 @@ class Record(models.Model):
     # description = models.TextField()
     age_group = models.ForeignKey(AgeGroup, blank=True, null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey(Discipline, blank=True, null=True, on_delete=models.SET_NULL)
-    place = models.ForeignKey(Place, blank=True, null=True, on_delete=models.SET_NULL)
+    venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
     performance = models.CharField(max_length=10, blank=False, null=True)
     # performance2 = models.DurationField(blank=True, null=True)

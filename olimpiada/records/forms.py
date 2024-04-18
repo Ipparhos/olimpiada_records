@@ -76,7 +76,7 @@ class RecordForm(forms.ModelForm):
                   'stadium',
                   'discipline',
                   'performance',
-                  'place',
+                  'venue',
                   'record_date', ]
         widgets = {  # 'stadium': forms.RadioSelect(),
             'record_date': forms.SelectDateWidget(years=range(2003, datetime.datetime.now().year + 1)),

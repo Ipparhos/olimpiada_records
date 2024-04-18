@@ -7,20 +7,27 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Performance</th>
                 <th>Discipline</th>
+                <th>Progression</th>
+                <th>Performance</th>
+                <th>Wind</th>
                 <th>Holder</th>
+                <th>Date of Birth</th>
+                <th>Venue</th>
                 <th>Date</th>
-                <th>Place</th>
+
             </tr>
         </thead>
         {% for object in record_list %}
         <tr>
-            <th> {{ object.performance }}</th>
             <th> {{ object.discipline.name }} </th>
+            <th></th>
+            <th> {{ object.performance }}</th>
+            <th></th>
             <th><a href="/records/{{object.pk}}">{{ object.holder.full_name_with_birthyear }}</a></th>
+            <th></th>
+            <th> {{ object.venue }}</th>
             <th> {{ object.record_date }}</th>
-            <th> {{ object.place }}</th>
         </tr>
         {% endfor %}
     </table>

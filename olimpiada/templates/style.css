@@ -1,0 +1,10 @@
+.mainbody {
+    background-image: url(./images/background\ img.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.LogoEnosis {
+    float: left;
+    height: 60px;
+}

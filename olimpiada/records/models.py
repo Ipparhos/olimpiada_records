@@ -80,11 +80,29 @@ class Record(models.Model):
     discipline = models.ForeignKey(Discipline, blank=True, null=True, on_delete=models.SET_NULL)
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
-    performance = models.CharField(max_length=10, blank=False, null=True)
+    performance = models.FloatField(blank=False, null=True)
     # performance2 = models.DurationField(blank=True, null=True)
     record_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def formatted_performance(self):
+        """Returns the performance as a formatted string (hh:mm:ss.ss)."""
+        if self.performance is None:
+            return ''
+
+        total_seconds = self.performance
+        # hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        seconds = total_seconds % 60
+
+        if minutes == 0 :
+            total_seconds_str = f"{seconds:05.2f}"
+        else:
+            total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
+        # Return formatted string
+        return total_seconds_str
 
     def __str__(self):
         return self.holder.__str__()

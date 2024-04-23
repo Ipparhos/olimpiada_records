@@ -6,10 +6,10 @@ from django.views.generic import View, ListView, TemplateView, DetailView, Redir
     DeleteView
 from django.utils.decorators import method_decorator
 
-from .forms import RecordForm#, UserCreationForm, UserLoginForm
+from .forms import RecordForm
 from .models import Record, Discipline
 
-User= get_user_model()
+User = get_user_model()
 # Create your views here.
 
 class LoginRequiredMixin(object):
@@ -118,37 +118,3 @@ def load_disciplines(request):
     print('stadium_id:', stadium_id)
     disciplines = Discipline.objects.filter(stadium_id=stadium_id).order_by('name')
     return render(request, 'records/disciplines_dropdown_list_options.html', {'disciplines': disciplines})
-
-
-# from django.contrib.auth.views import LogoutView
-#
-# class CustomLogoutView(LogoutView):
-#     def dispatch(self, request, *args, **kwargs):
-#         if self.request.method == 'GET':
-#             return self.get(request, *args, **kwargs)
-#         return super().dispatch(request, *args, **kwargs)
-
-
-
-# def register(request, *args, **kwargs):
-#     form = UserCreationForm(request.POST or None)
-#     if form.is_valid():
-#         form.save()
-#         return HttpResponseRedirect('/login')
-#     return render(request, 'records/register.html',{"form": form})
-#
-#
-# def user_login(request, *args, **kwargs):
-#     form = UserLoginForm(request.POST or None)
-#     if form.is_valid():
-#         user_obj = form.cleaned_data.get('user_obj')
-#         login(request, user_obj)
-#         print(f"User {user_obj} logged in successfully")
-#         return HttpResponseRedirect('/')
-#     return render(request, 'records/login.html', {"form": form})
-#
-#
-# def user_logout(request, *args, **kwargs):
-#     logout(request)
-#
-#     return HttpResponseRedirect('/login')

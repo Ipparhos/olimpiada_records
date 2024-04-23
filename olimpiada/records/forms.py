@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db.models import Q
+import re
 
 from .models import Record, Discipline
 import datetime
@@ -14,6 +15,13 @@ User = get_user_model()
 
 
 class RecordForm(forms.ModelForm):
+    performance = forms.CharField(
+        label='Performance',
+        max_length=12,
+        required=True,
+        help_text="Enter performance in the format 'mm:ss.ss'"
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['discipline'].queryset = Discipline.objects.none()
@@ -28,46 +36,32 @@ class RecordForm(forms.ModelForm):
             self.fields['discipline'].queryset = self.instance.stadium.discipline_set.order_by('id')
 
     def clean_performance(self):
-        discipline = self.cleaned_data.get('discipline')
-        print(discipline)
-        performance_value = self.cleaned_data.get('performance')
+        performance_str = self.cleaned_data['performance']
 
-        # Add logic to validate performance based on discipline
-        # Example:
-        if discipline.discipline_type == 'road':
-            print(discipline.name)
-            print(discipline.discipline_type)
-            # validate performance as duration
-            # Example: You can use Django's DurationField to validate duration
-            # You may need to import datetime.timedelta for duration calculation
+        # Validate the expected format "hh:mm:ss.ss"
+        try:
+            time_pattern = re.compile(r'^(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+            match = time_pattern.match(performance_str)
+            minutes = float(match.group("minutes"))
+            seconds = float(match.group("seconds"))
 
-            # Split the time into minutes and seconds
-            if ':' in performance_value:
-                try:
-                    minutes, seconds = performance_value.split(':')
-                    # Try converting to integers
-                    minutes = int(minutes)
-                    seconds = float(seconds)
-                except ValueError:
-                    raise forms.ValidationError("Invalid time format. Please use mm:ss.ss")
-            else:
-                seconds = float(performance_value)
-                minutes = 0
+            total_seconds = minutes * 60 + seconds  # hours * 3600
+        except:
+            time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+            match = time_pattern.match(performance_str)
 
-            if not (0 <= minutes < 60 and 0 <= seconds < 60):
-                raise forms.ValidationError("Invalid time range.")
-            # performance_value = minutes * 60 + seconds
-        else:
-            # Validate performance as float
-            try:
-                print(discipline.discipline_type)
-                # Validate performance as float
-                float_value = float(performance_value)
-                # pass
-            except ValueError:
-                raise forms.ValidationError("Invalid float format")
+            total_seconds = float(match.group("seconds"))
 
-        return performance_value
+
+        if not match:
+            raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
+
+        # Convert to total seconds
+        # hours = float(match.group("hours"))
+
+
+        return total_seconds
+
 
     class Meta:
         model = Record

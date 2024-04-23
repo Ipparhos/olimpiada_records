@@ -3,7 +3,14 @@
 {% block content %}
 <form method="post"  id="recordForm" data-discipline-url="{% url 'ajax_load_disciplines' %}" >
   {% csrf_token %}
-  {{ form.as_p }}
+  {{ form.as_p }} <br>
+<!--  <p>Hodler: {{ form.holder }}</p> <br>-->
+<!--  {{ form.age_group }}-->
+<!--  {{ form.stadium }}-->
+<!--  {{ form.event }}-->
+<!--  {{ form.performance }} &lt;!&ndash; Render as a text input &ndash;&gt;-->
+<!--  {{ form.place }}-->
+<!--  {{ form.record_date }}-->
 
 
   <input type="submit" value="Save"/>

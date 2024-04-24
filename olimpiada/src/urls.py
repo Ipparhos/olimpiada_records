@@ -31,7 +31,7 @@ urlpatterns = [
     # path('logout/', user_logout, name='logout'),
     # path('about-us/', RedirectView.as_view(url='www.about-us.com')),
     path('accounts/', include('allauth.urls')),
-    path('', RecordRedirectToListView.as_view()),
+    path('', RecordRedirectToListView.as_view(), name='home'),
     path('records/', RecordListView.as_view(), name='records-list'),
     path('r/<int:pk>/', RecordRedirectView.as_view()),
     # path('records/<int:pk>/', RecordDetailView.as_view(), name='records-detail'),

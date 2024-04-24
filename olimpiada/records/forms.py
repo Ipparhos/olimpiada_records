@@ -7,12 +7,34 @@ from django.core.validators import RegexValidator
 from django.db.models import Q
 import re
 
-from .models import Record, Discipline
+from .models import Record, Discipline, Athlete
+from allauth.account.forms import SignupForm
 import datetime
 
 User = get_user_model()
 
 
+class UserSignupForm(SignupForm):
+    first_name = forms.CharField(max_length=120, required=True)
+    last_name = forms.CharField(max_length=120, required=True)
+
+    def save(self, request):
+        user = super().save(request)
+
+        # Set additional fields (if needed)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+
+        # Ensure user is saved after setting fields
+        user.save()
+
+        # Create an Athlete instance using first and last names
+        Athlete.objects.create(
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+        )
+
+        return user
 
 class RecordForm(forms.ModelForm):
     performance = forms.CharField(

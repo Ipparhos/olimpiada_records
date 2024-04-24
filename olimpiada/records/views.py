@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout, get_user_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, ListView, TemplateView, DetailView, RedirectView, CreateView, UpdateView, \
     DeleteView
 from django.utils.decorators import method_decorator
 
-from .forms import RecordForm
+from .forms import RecordForm, UserSignupForm
 from .models import Record, Discipline
 
 User = get_user_model()
@@ -118,3 +118,16 @@ def load_disciplines(request):
     print('stadium_id:', stadium_id)
     disciplines = Discipline.objects.filter(stadium_id=stadium_id).order_by('name')
     return render(request, 'records/disciplines_dropdown_list_options.html', {'disciplines': disciplines})
+
+
+def user_signup(request):
+    if request.method == 'POST':
+        form = UserSignupForm(request.POST)
+        if form.is_valid():
+            user = form.save(request)  # Note: Pass 'request' to save
+            login(request, user)
+            return redirect('/')  # Redirect to home or desired page
+    else:
+        form = UserSignupForm()
+
+    return render(request, 'signup.html', {'form': form})

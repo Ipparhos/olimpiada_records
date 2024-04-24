@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post"  id="goalForm" data-discipline-url="{% url 'ajax_load_disciplines' %}" >
+  {% csrf_token %}
+  {{ form.as_p }} <br>
+<!--  <p>Hodler: {{ form.holder }}</p> <br>-->
+<!--  {{ form.age_group }}-->
+<!--  {{ form.stadium }}-->
+<!--  {{ form.event }}-->
+<!--  {{ form.performance }} &lt;!&ndash; Render as a text input &ndash;&gt;-->
+<!--  {{ form.place }}-->
+<!--  {{ form.goal_date }}-->
+
+
+  <input type="submit" value="Save"/>
+    <a href="/">Cancel</a>
+  {% if delete_url %}
+    <a href="{{delete_url}}">Delete</a>
+  {% endif %}
+</form>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $("#id_stadium").change(function () {
+      var url = $("#goalForm").attr("data-discipline-url");  // get the url of the `load_cities` view
+      var stadiumId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'stadium': stadiumId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_discipline").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>This years Goals</h1>
+<!--    {{ record_list }}-->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Discipline</th>
+                <th>Progression</th>
+                <th>Performance</th>
+                <th>Wind</th>
+                <th>Athlete</th>
+                <th>Date of Birth</th>
+                <th>Venue</th>
+                <th>Date</th>
+
+            </tr>
+        </thead>
+        {% for object in goal_list %}
+        <tr>
+            <th> {{ object.discipline.name }} </th>
+            <th></th>
+            <th> {{ object.formatted_performance }}</th>
+            <th></th>
+            <th><a href="/goals/{{object.pk}}">{{ object.athlete.full_name_with_birthyear }}</a></th>
+            <th></th>
+            <th> {{ object.venue }}</th>
+            <th> {{ object.goal_date }}</th>
+        </tr>
+        {% endfor %}
+    </table>
+
+<!--    {% for object in record_list %}-->
+<!--    <li><a href="/records/{{object.pk}}">{{ object }}</a>  </li>-->
+<!--    {% endfor %}-->
+
+<h4>To add a new record Click the following </h4>
+    <a href="/goals/create">Add new Goal</a>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!--    <h1>Detail View</h1>-->
+<!--    <h3> Holder: </h3>{{ record.holder }}-->
+<!--    <h3> Stadium: </h3> {{ record.get_stadium_display }}-->
+<!--    <h3> Event: </h3> {{ record.get_event_display }}-->
+<!--    <h3> Performance: </h3> {{ record.performance }}-->
+<!--    <h3> Age Group: </h3> {{ record.get_age_group_display }}-->
+<!--    <h3> Record date: </h3> {{ record.record_date }}-->
+
+    <p><a href="/">Goal List</a></p>
+    {% if form %}
+        {% include 'goal_forms.html' with form=form delete_url=object.get_delete_url %}
+    {% endif %}
+<!--    <a href="/records/{{object.pk}}/delete">Delete</a>-->
+{% endblock %}

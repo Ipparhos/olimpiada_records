@@ -6,8 +6,8 @@ from django.views.generic import View, ListView, TemplateView, DetailView, Redir
     DeleteView
 from django.utils.decorators import method_decorator
 
-from .forms import RecordForm, UserSignupForm
-from .models import Record, Discipline
+from .forms import RecordForm, UserSignupForm, GoalForm
+from .models import Record, Discipline, Goal
 
 User = get_user_model()
 # Create your views here.
@@ -131,3 +131,58 @@ def user_signup(request):
         form = UserSignupForm()
 
     return render(request, 'signup.html', {'form': form})
+
+
+class GoalListView(LoginRequiredMixin, ListView):
+    """ app_name = records
+        model = record
+        view_name = list
+        template_name = <app_name>/<model>_<view_name>.html"""
+    model = Goal
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['title'] = self.get_title()
+        # print(context)
+        return context
+
+    def get_title(self):
+        return self.title
+
+    # template_name = 'record_list.html'
+    title = 'Goals'
+
+
+class GoalCreateView(LoginRequiredMixin, CreateView):
+    form_class = GoalForm
+    template_name = 'goal_forms.html'
+    success_url = '/goals'
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        # print(form.cleaned_data)
+        return super().form_valid(form)
+
+
+class GoalUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = GoalForm
+    model = Goal
+    template_name_suffix = '_detail'
+
+    def get_queryset(self):
+        return Goal.objects.filter(user=self.request.user)
+
+    def get_success_url(self):
+        return self.object.get_edit_url()
+
+
+class GoalDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = 'forms_delete.html'
+
+    def get_queryset(self):
+        return Goal.objects.filter(user=self.request.user)
+
+    def get_success_url(self):
+        return "/goals/"

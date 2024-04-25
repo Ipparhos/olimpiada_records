@@ -108,6 +108,12 @@ class GoalForm(forms.ModelForm):
         required=True,
         help_text="Enter performance in the format 'mm:ss.ss'"
     )
+    current_record = forms.CharField(
+        label='Current Record(Optional)',
+        max_length=12,
+        required=True,
+        help_text="Enter performance in the format 'mm:ss.ss'"
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -145,12 +151,36 @@ class GoalForm(forms.ModelForm):
         # hours = float(match.group("hours"))
         return total_seconds
 
+    def clean_current_record(self):
+        current_record_str = self.cleaned_data['current_record']
+        # Validate the expected format "hh:mm:ss.ss"
+        try:
+            time_pattern = re.compile(r'^(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+            match = time_pattern.match(current_record_str)
+            minutes = float(match.group("minutes"))
+            seconds = float(match.group("seconds"))
+
+            total_seconds = minutes * 60 + seconds  # hours * 3600
+        except:
+            time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+            match = time_pattern.match(current_record_str)
+
+            total_seconds = float(match.group("seconds"))
+
+        if not match:
+            raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
+
+        # Convert to total seconds
+        # hours = float(match.group("hours"))
+        return total_seconds
+
     class Meta:
         model = Goal
         fields = ['athlete',
                   'age_group',
                   'stadium',
                   'discipline',
+                  'current_record',
                   'performance',
                   'venue',
                   'goal_date', ]

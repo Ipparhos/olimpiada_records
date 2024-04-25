@@ -97,7 +97,7 @@ class Record(models.Model):
         minutes = int((total_seconds % 3600) // 60)
         seconds = total_seconds % 60
 
-        if minutes == 0 :
+        if minutes == 0:
             total_seconds_str = f"{seconds:05.2f}"
         else:
             total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
@@ -133,6 +133,7 @@ class Goal(models.Model):
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
     performance = models.FloatField(blank=False, null=True)
+    current_record = models.FloatField(blank=False, null=True)
     # performance2 = models.DurationField(blank=True, null=True)
     goal_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -149,7 +150,25 @@ class Goal(models.Model):
         minutes = int((total_seconds % 3600) // 60)
         seconds = total_seconds % 60
 
-        if minutes == 0 :
+        if minutes == 0:
+            total_seconds_str = f"{seconds:05.2f}"
+        else:
+            total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
+        # Return formatted string
+        return total_seconds_str
+
+    @property
+    def formatted_current_record(self):
+        """Returns the performance as a formatted string (hh:mm:ss.ss)."""
+        if self.current_record is None:
+            return ''
+
+        total_seconds = self.current_record
+        # hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        seconds = total_seconds % 60
+
+        if minutes == 0:
             total_seconds_str = f"{seconds:05.2f}"
         else:
             total_seconds_str = f"{minutes:02}:{seconds:05.2f}"

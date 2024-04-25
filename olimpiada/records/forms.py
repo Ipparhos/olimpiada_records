@@ -69,11 +69,15 @@ class RecordForm(forms.ModelForm):
 
             total_seconds = minutes * 60 + seconds  # hours * 3600
         except:
+            pass
+
+        try:
             time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
             match = time_pattern.match(performance_str)
 
             total_seconds = float(match.group("seconds"))
-
+        except:
+            pass
 
         if not match:
             raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
@@ -139,10 +143,14 @@ class GoalForm(forms.ModelForm):
 
             total_seconds = minutes * 60 + seconds  # hours * 3600
         except:
+            pass
+        try:
             time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
             match = time_pattern.match(performance_str)
 
             total_seconds = float(match.group("seconds"))
+        except:
+            pass
 
         if not match:
             raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
@@ -162,10 +170,15 @@ class GoalForm(forms.ModelForm):
 
             total_seconds = minutes * 60 + seconds  # hours * 3600
         except:
+            pass
+
+        try:
             time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
             match = time_pattern.match(current_record_str)
 
             total_seconds = float(match.group("seconds"))
+        except:
+            pass
 
         if not match:
             raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")

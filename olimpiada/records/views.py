@@ -51,7 +51,7 @@ class AboutUsView(LoginRequiredMixin, TemplateView):
 # class RecordsListView(ListView):
 #     queryset = Record.objects.all()
 
-class RecordListView(LoginRequiredMixin, ListView):
+class RecordListView(ListView):
     """ app_name = records
         model = record
         view_name = list
@@ -133,7 +133,7 @@ def user_signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-class GoalListView(LoginRequiredMixin, ListView):
+class GoalListView(ListView):
     """ app_name = records
         model = record
         view_name = list

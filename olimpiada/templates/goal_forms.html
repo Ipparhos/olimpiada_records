@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="post"  id="recordForm" data-discipline-url="{% url 'ajax_load_disciplines' %}" >
+<form method="post"  id="goalForm" data-discipline-url="{% url 'ajax_load_disciplines' %}" >
   {% csrf_token %}
   {{ form.as_p }} <br>
 <!--  <p>Hodler: {{ form.holder }}</p> <br>-->
@@ -10,7 +10,7 @@
 <!--  {{ form.event }}-->
 <!--  {{ form.performance }} &lt;!&ndash; Render as a text input &ndash;&gt;-->
 <!--  {{ form.place }}-->
-<!--  {{ form.record_date }}-->
+<!--  {{ form.goal_date }}-->
 
 
   <input type="submit" value="Save"/>
@@ -23,7 +23,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
     $("#id_stadium").change(function () {
-      var url = $("#recordForm").attr("data-discipline-url");  // get the url of the `load_cities` view
+      var url = $("#goalForm").attr("data-discipline-url");  // get the url of the `load_cities` view
       var stadiumId = $(this).val();  // get the selected country ID from the HTML input
 
       $.ajax({                       // initialize an AJAX request

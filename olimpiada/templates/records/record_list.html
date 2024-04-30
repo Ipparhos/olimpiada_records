@@ -16,27 +16,27 @@
          <table class="table table-striped">
          <thead>
              <tr>
-                 <th>Discipline</th>
-                 <th>Progression</th>
-                 <th>Performance</th>
-                 <th>Wind</th>
-                 <th>Holder</th>
-                 <th>Date of Birth</th>
-                 <th>Venue</th>
-                 <th>Date</th>
+                <th>Discipline</th>
+                <th>Progression</th>
+                <th>Performance</th>
+                <th>Wind</th>
+                <th>Holder</th>
+                <th>Date of Birth</th>
+                <th>Venue</th>
+                <th>Date</th>
  
              </tr>
          </thead>
          
          <tr>
-             <th> 1500 </th>
-             <th></th>
-             <th> {{ object.performance }}</th>
-             <th></th>
-             <th><a href="/records/{{object.pk}}">{{ object.holder.full_name_with_birthyear }}</a></th>
-             <th></th>
-             <th> {{ object.venue }}</th>
-             <th> {{ object.record_date }}</th>
+              <th> {{ object.discipline.name }} </th>
+              <th></th>
+              <th> {{ object.formatted_performance }}</th>
+              <th></th>
+              <th><a href="/records/{{object.pk}}">{{ object.holder.full_name_with_birthyear }}</a></th>
+              <th></th>
+              <th> {{ object.venue }}</th>
+              <th> {{ object.record_date }}</th>
          </tr>
          
      </table>
@@ -48,4 +48,5 @@
  
         <h4>To add a new record Click the following </h4>
         <a href="/records/create">Add new Record</a>
+
 {% endblock %}

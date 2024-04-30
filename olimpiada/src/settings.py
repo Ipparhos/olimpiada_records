@@ -114,6 +114,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # for password 
 
 WSGI_APPLICATION = 'src.wsgi.application'
 
+ACCOUNT_FORMS = {
+    'signup': 'records.forms.UserSignupForm',
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

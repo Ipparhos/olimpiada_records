@@ -21,7 +21,8 @@ from django.views.generic import TemplateView, RedirectView
 
 from records.views import (RecordListView, RecordDetailView, RecordRedirectView,
                            RecordRedirectToListView, RecordCreateView, RecordUpdateView,
-                           RecordDeleteView, load_disciplines)#, register, user_login
+                           RecordDeleteView, load_disciplines, GoalListView, GoalCreateView,
+                           GoalUpdateView, GoalDeleteView )#, register, user_login
 
 
 urlpatterns = [
@@ -31,7 +32,7 @@ urlpatterns = [
     # path('logout/', user_logout, name='logout'),
     # path('about-us/', RedirectView.as_view(url='www.about-us.com')),
     path('accounts/', include('allauth.urls')),
-    path('', RecordRedirectToListView.as_view()),
+    path('', RecordRedirectToListView.as_view(), name='home'),
     path('records/', RecordListView.as_view(), name='records-list'),
     path('r/<int:pk>/', RecordRedirectView.as_view()),
     # path('records/<int:pk>/', RecordDetailView.as_view(), name='records-detail'),
@@ -39,6 +40,11 @@ urlpatterns = [
     path('records/<int:pk>/delete/', RecordDeleteView.as_view(), name='records-delete'),
     path('records/create/', RecordCreateView.as_view(), name='records-create'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
+
+    path('goals/', GoalListView.as_view(), name='goals-list'),
+    path('goals/<int:pk>/', GoalUpdateView.as_view(), name='goals-update'),
+    path('goals/<int:pk>/delete/', GoalDeleteView.as_view(), name='goals-delete'),
+    path('goals/create/', GoalCreateView.as_view(), name='goals-create'),
 
     path('ajax/load-disciplines/', load_disciplines, name='ajax_load_disciplines'),
 ]

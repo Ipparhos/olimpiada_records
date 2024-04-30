@@ -80,11 +80,29 @@ class Record(models.Model):
     discipline = models.ForeignKey(Discipline, blank=True, null=True, on_delete=models.SET_NULL)
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
-    performance = models.CharField(max_length=10, blank=False, null=True)
+    performance = models.FloatField(blank=False, null=True)
     # performance2 = models.DurationField(blank=True, null=True)
     record_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def formatted_performance(self):
+        """Returns the performance as a formatted string (hh:mm:ss.ss)."""
+        if self.performance is None:
+            return ''
+
+        total_seconds = self.performance
+        # hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        seconds = total_seconds % 60
+
+        if minutes == 0:
+            total_seconds_str = f"{seconds:05.2f}"
+        else:
+            total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
+        # Return formatted string
+        return total_seconds_str
 
     def __str__(self):
         return self.holder.__str__()
@@ -104,3 +122,74 @@ class Record(models.Model):
         # verbose_name_plural = 'Records' # How admin sees the name for multiple objs
         unique_together = [['holder', 'discipline', 'performance']]
         db_table = 'Olimpiada records'
+
+
+class Goal(models.Model):
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    athlete = models.ForeignKey(Athlete, blank=True, null=True, on_delete=models.SET_NULL)
+    # description = models.TextField()
+    age_group = models.ForeignKey(AgeGroup, blank=True, null=True, on_delete=models.SET_NULL)
+    discipline = models.ForeignKey(Discipline, blank=True, null=True, on_delete=models.SET_NULL)
+    venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
+    stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
+    performance = models.FloatField(blank=False, null=True)
+    current_record = models.FloatField(blank=False, null=True)
+    # performance2 = models.DurationField(blank=True, null=True)
+    goal_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def formatted_performance(self):
+        """Returns the performance as a formatted string (hh:mm:ss.ss)."""
+        if self.performance is None:
+            return ''
+
+        total_seconds = self.performance
+        # hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        seconds = total_seconds % 60
+
+        if minutes == 0:
+            total_seconds_str = f"{seconds:05.2f}"
+        else:
+            total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
+        # Return formatted string
+        return total_seconds_str
+
+    @property
+    def formatted_current_record(self):
+        """Returns the performance as a formatted string (hh:mm:ss.ss)."""
+        if self.current_record is None:
+            return ''
+
+        total_seconds = self.current_record
+        # hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        seconds = total_seconds % 60
+
+        if minutes == 0:
+            total_seconds_str = f"{seconds:05.2f}"
+        else:
+            total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
+        # Return formatted string
+        return total_seconds_str
+
+    def __str__(self):
+        return self.athlete.__str__()
+
+    def get_absolute_url(self):
+        return f'/goals/{self.pk}/'
+
+    def get_edit_url(self):
+        return f'/goals/'
+
+    def get_delete_url(self):
+        return f'/goals/{self.pk}/delete/'
+
+    class Meta:
+        ordering = ['performance', '-goal_date']
+        # verbose_name = ''  # How admin sees the name for single obj
+        # verbose_name_plural = 'Records' # How admin sees the name for multiple objs
+        unique_together = [['athlete', 'discipline', 'performance']]
+        db_table = 'Olimpiada goals'

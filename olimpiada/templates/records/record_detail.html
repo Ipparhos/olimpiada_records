@@ -9,7 +9,7 @@
 <!--    <h3> Age Group: </h3> {{ record.get_age_group_display }}-->
 <!--    <h3> Record date: </h3> {{ record.record_date }}-->
 
-    <p><a href="/">Record List</a></p>
+
     {% if form %}
         {% include 'forms.html' with form=form delete_url=object.get_delete_url %}
     {% endif %}

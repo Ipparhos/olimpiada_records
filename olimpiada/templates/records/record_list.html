@@ -12,7 +12,7 @@
            <!--    {{ record_list }}-->
            
           
-         <div class="overflow-x-scroll">        
+         <div class="overflow-x-scroll">
          <table class="table table-striped">
          <thead>
              <tr>
@@ -27,7 +27,7 @@
  
              </tr>
          </thead>
-         
+         {% for object in record_list %}
          <tr>
               <th> {{ object.discipline.name }} </th>
               <th></th>
@@ -38,7 +38,7 @@
               <th> {{ object.venue }}</th>
               <th> {{ object.record_date }}</th>
          </tr>
-         
+         {% endfor %}
      </table>
   </div>
  

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,8 +34,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.sites',
-    # 'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,13 +46,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
 ]
-# ACCOUNT_ACTIVATION_DAYS = 1  # One-week activation window; you may, of course, use a different value.
-# REGISTRATION_AUTO_LOGIN = True  # Automatically log the user in.
-# REGISTRATION_OPEN = True  # A boolean indicating whether registration of new accounts is currently permitted
-# LOGIN_REDIRECT_URL = '/records/'  # The page you want users to arrive at after they successful log in
-# LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,
-                                                            # and are trying to access pages requiring authentication
-# AUTH_USER_MODEL = "records.MyUser"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -164,6 +158,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    # '/var/www/static/',
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

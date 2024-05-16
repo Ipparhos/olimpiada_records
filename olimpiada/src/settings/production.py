@@ -15,7 +15,7 @@ import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 TEMPLATE_DIR = BASE_DIR / 'templates'
 
 
@@ -26,9 +26,9 @@ TEMPLATE_DIR = BASE_DIR / 'templates'
 SECRET_KEY = 'django-insecure-8nq!$#za4d&)v6wi0fx#p2$olk)t95=21tu&sfvz6=qa))(v0m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

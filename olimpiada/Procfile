@@ -1,0 +1,1 @@
+web: gunicorn olimpiada.src.wsgi --log-file--

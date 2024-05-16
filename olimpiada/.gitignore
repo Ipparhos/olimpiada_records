@@ -1,12 +1,13 @@
 
-../.venv
+
+src/settings/local.py
 .idea/
-olimpiada/db.sqlite3
+db.sqlite3
 media
-olimpiada/src/__pycache__/
+src/__pycache__/
 *.py[cod]
 *$py.class
-
+../../.venv
 # Distribution / packaging
 .Python build/
 develop-eggs/

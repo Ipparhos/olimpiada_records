@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-8nq!$#za4d&)v6wi0fx#p2$olk)t95=21tu&sfvz6=qa))(v0m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://olimpiada-records-548402b3d605.herokuapp.com/', 'localhost', '127.0.0.1']
 
 
 # Application definition

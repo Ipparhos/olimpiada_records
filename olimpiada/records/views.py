@@ -37,7 +37,7 @@ class RecordRedirectToListView(RedirectView):
         return '/records/'
 
 
-class AboutUsView(LoginRequiredMixin, TemplateView):
+class AboutUsView(TemplateView):
     template_name = 'about.html'
 
 

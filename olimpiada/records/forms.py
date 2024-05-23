@@ -17,6 +17,7 @@ User = get_user_model()
 class UserSignupForm(SignupForm):
     first_name = forms.CharField(max_length=120, required=True)
     last_name = forms.CharField(max_length=120, required=True)
+    birth_year = forms.IntegerField(required=True)
 
     def save(self, request):
         user = super().save(request)
@@ -24,6 +25,7 @@ class UserSignupForm(SignupForm):
         # Set additional fields (if needed)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.birth_year = self.cleaned_data['birth_year']
 
         # Ensure user is saved after setting fields
         user.save()
@@ -32,6 +34,7 @@ class UserSignupForm(SignupForm):
         Athlete.objects.create(
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
+            birth_year=self.cleaned_data['birth_year'],
         )
 
         return user
@@ -72,15 +75,16 @@ class RecordForm(forms.ModelForm):
             pass
 
         try:
-            time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
-            match = time_pattern.match(performance_str)
+            if not match:
+                time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+                match = time_pattern.match(performance_str)
 
-            total_seconds = float(match.group("seconds"))
+                total_seconds = float(match.group("seconds"))
         except:
             pass
 
         if not match:
-            raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
+            raise forms.ValidationError("Invalid time format. Expected 'mm:ss.ss'")
 
         # Convert to total seconds
         # hours = float(match.group("hours"))

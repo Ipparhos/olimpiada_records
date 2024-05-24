@@ -22,7 +22,7 @@ from django.views.generic import TemplateView, RedirectView
 from records.views import (RecordListView, RecordDetailView, RecordRedirectView,
                            RecordRedirectToListView, RecordCreateView, RecordUpdateView,
                            RecordDeleteView, load_disciplines, GoalListView, GoalCreateView,
-                           GoalUpdateView, GoalDeleteView )#, register, user_login
+                           GoalUpdateView, GoalDeleteView, AboutUsView )#, register, user_login
 
 
 urlpatterns = [
@@ -39,7 +39,7 @@ urlpatterns = [
     path('records/<int:pk>/', RecordUpdateView.as_view(), name='records-update'),
     path('records/<int:pk>/delete/', RecordDeleteView.as_view(), name='records-delete'),
     path('records/create/', RecordCreateView.as_view(), name='records-create'),
-    path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
+    path('about/', AboutUsView.as_view(), name='about'),
 
     path('goals/', GoalListView.as_view(), name='goals-list'),
     path('goals/<int:pk>/', GoalUpdateView.as_view(), name='goals-update'),

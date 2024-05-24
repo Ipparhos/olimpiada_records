@@ -1,0 +1,17 @@
+.LogoEnosis {
+    float: left;
+    height: 60px;
+}
+
+.firstcolor { 
+    color: #134591;
+}
+.secondcolor {
+    color: #b2b2b2;
+}
+.thirdcolor {
+    color: #000000;
+}
+h1, h2, h3, h4, h5 {
+    color: #134591;
+}

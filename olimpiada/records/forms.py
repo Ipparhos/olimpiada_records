@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.safestring import mark_safe
 
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
@@ -47,6 +48,7 @@ class RecordForm(forms.ModelForm):
         help_text="Enter performance in the format 'mm:ss.ss'"
     )
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['discipline'].queryset = Discipline.objects.none()
@@ -76,7 +78,7 @@ class RecordForm(forms.ModelForm):
 
         try:
             if not match:
-                time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+                time_pattern = re.compile(r'(?P<seconds>\d{1,3}(\.\d{1,3})?)$')
                 match = time_pattern.match(performance_str)
 
                 total_seconds = float(match.group("seconds"))
@@ -100,13 +102,17 @@ class RecordForm(forms.ModelForm):
                   'stadium',
                   'discipline',
                   'performance',
+                  'ranking',
                   'venue',
+                  'wind',
                   'record_date', ]
         widgets = {  # 'stadium': forms.RadioSelect(),
             'record_date': forms.SelectDateWidget(years=range(2003, datetime.datetime.now().year + 1)),
         }
         help_texts = {
-            'performance': 'Please enter the performance in the format mm:ss.ss',
+            'venue': "If your desired Venue doesn't appear on the list contact admin.",
+            'wind' : "Legal values are between -2.0 to +2.0",
+            'ranking' : mark_safe("Follow this link to calculate <a href='https://caltaf.com/pointscalc/calc.html'>ranking</a>"),
         }
 
 class GoalForm(forms.ModelForm):
@@ -149,10 +155,11 @@ class GoalForm(forms.ModelForm):
         except:
             pass
         try:
-            time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
-            match = time_pattern.match(performance_str)
+            if not match:
+                time_pattern = re.compile(r'(?P<seconds>\d{1,3}(\.\d{1,3})?)$')
+                match = time_pattern.match(performance_str)
 
-            total_seconds = float(match.group("seconds"))
+                total_seconds = float(match.group("seconds"))
         except:
             pass
 
@@ -177,15 +184,16 @@ class GoalForm(forms.ModelForm):
             pass
 
         try:
-            time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
-            match = time_pattern.match(current_record_str)
+            if not match:
+                time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+                match = time_pattern.match(current_record_str)
 
-            total_seconds = float(match.group("seconds"))
+                total_seconds = float(match.group("seconds"))
         except:
             pass
 
         if not match:
-            raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
+            raise forms.ValidationError("Invalid time format. Expected 'mm:ss.ss'")
 
         # Convert to total seconds
         # hours = float(match.group("hours"))
@@ -205,5 +213,5 @@ class GoalForm(forms.ModelForm):
             'goal_date': forms.SelectDateWidget(years=range(datetime.datetime.now().year -1, datetime.datetime.now().year + 1)),
         }
         help_texts = {
-            'performance': 'Please enter the performance in the format mm:ss.ss',
+            'venue': "If your desired Venue doesn't appear on the list contact admin.",
         }

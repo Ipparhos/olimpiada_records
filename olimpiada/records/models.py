@@ -3,6 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 User = settings.AUTH_USER_MODEL
 # USERNAME_REGEX = '^[a-zA-Z0-9_@.+-]'
@@ -81,7 +82,15 @@ class Record(models.Model):
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     stadium = models.ForeignKey(Stadium, blank=True, null=True, on_delete=models.SET_NULL)
     performance = models.FloatField(blank=False, null=True)
+    ranking = models.IntegerField(blank=True, null=True)
     # performance2 = models.DurationField(blank=True, null=True)
+    wind = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        validators=[MinValueValidator(-9.9), MaxValueValidator(9.9)],
+        null=True,
+        blank=True
+    )
     record_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -91,21 +100,30 @@ class Record(models.Model):
         """Returns the performance as a formatted string (hh:mm:ss.ss)."""
         if self.performance is None:
             return ''
+        # print(self.discipline.discipline_type)
+        if self.discipline.discipline_type == 'road':
+            performance_formatted = self.performance
+            # hours = int(total_seconds // 3600)
+            minutes = int((performance_formatted % 3600) // 60)
+            seconds = performance_formatted % 60
 
-        total_seconds = self.performance
-        # hours = int(total_seconds // 3600)
-        minutes = int((total_seconds % 3600) // 60)
-        seconds = total_seconds % 60
-
-        if minutes == 0:
-            total_seconds_str = f"{seconds:05.2f}"
+            if minutes == 0:
+                performance_formatted_str = f"{seconds:05.2f}"
+            else:
+                performance_formatted_str = f"{minutes:02}:{seconds:05.2f}"
         else:
-            total_seconds_str = f"{minutes:02}:{seconds:05.2f}"
+            performance_formatted_str = f'{self.performance:.2f}'
         # Return formatted string
-        return total_seconds_str
+        return performance_formatted_str
 
     def __str__(self):
         return self.holder.__str__()
+
+    def get_wind_display(self):
+        return '' if self.wind is None else str(self.wind)
+
+    def get_ranking_display(self):
+        return '' if self.ranking is None else str(self.ranking)
 
     def get_absolute_url(self):
         return f'/records/{self.pk}/'

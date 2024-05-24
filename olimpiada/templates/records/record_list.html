@@ -8,7 +8,7 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
            -->
-           <h1 align="center">A.O. Olimpiada Kifisias E.O.K.A. Records</h1>
+           <h1 class="align-self-center">A.O. Olimpiada Kifisias E.O.K.A. Records</h1>
            <!--    {{ record_list }}-->
 
           
@@ -32,9 +32,9 @@
               <th> {{ object.discipline.name }} </th>
               <th></th>
               <th> {{ object.formatted_performance }}</th>
-              <th></th>
+              <th>{{ object.get_wind_display }}</th>
               <th><a href="/records/{{object.pk}}">{{ object.holder.full_name_with_birthyear }}</a></th>
-              <th></th>
+              <th> {{ object.get_ranking_display }}</th>
               <th> {{ object.venue }}</th>
               <th> {{ object.record_date }}</th>
          </tr>

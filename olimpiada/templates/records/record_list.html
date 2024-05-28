@@ -11,12 +11,16 @@
            <h1 class="align-self-center">A.O. Olimpiada Kifisias E.O.K.A. Records</h1>
            <!--    {{ record_list }}-->
 
-          
+        <form id="filter-form" method="get">
+    {{ filter_form.as_p }}
+    </form>
          <div class="overflow-x-scroll">
+
          <table class="table table-striped">
          <thead>
              <tr>
                 <th>Discipline</th>
+                <th>Age Group</th>
                 <th>Progression</th>
                 <th>Performance</th>
                 <th>Wind</th>
@@ -30,10 +34,11 @@
          {% for object in record_list %}
          <tr>
               <th> {{ object.discipline.name }} </th>
-              <th></th>
+              <th> {{ object.age_group }}</th>
+              <th> {{ object.progression }}</th>
               <th> {{ object.formatted_performance }}</th>
               <th>{{ object.get_wind_display }}</th>
-              <th><a href="/records/{{object.pk}}">{{ object.holder.full_name_with_birthyear }}</a></th>
+              <th>{{ object.holder.full_name_with_birthyear }}</th> <!--<a href="/records/{{object.pk}}">}</a>-->
               <th> {{ object.get_ranking_display }}</th>
               <th> {{ object.venue }}</th>
               <th> {{ object.record_date }}</th>
@@ -50,5 +55,15 @@
         <a href="/records/create">Add new Record</a>
 
         <h6>Tip:To find your record's ranking click 'Ranking' on records table.</h6>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const radios = document.querySelectorAll('input[name="indoors_outdoors"]');
+      radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          document.getElementById('filter-form').submit();
+        });
+      });
+    });
+  </script>
 
 {% endblock %}

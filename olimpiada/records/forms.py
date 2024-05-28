@@ -8,11 +8,29 @@ from django.core.validators import RegexValidator
 from django.db.models import Q
 import re
 
-from .models import Record, Discipline, Athlete, Goal
+from .models import Record, Discipline, Athlete, Goal, Stadium
 from allauth.account.forms import SignupForm
 import datetime
 
 User = get_user_model()
+
+
+class StadiumForm(forms.ModelForm):
+    class Meta:
+        model = Stadium
+        fields = ['name', 'indoors_outdoors']
+        widgets = {
+            'indoors_outdoors': forms.RadioSelect(choices=Stadium.INDOORS_OUTDOORS_CHOICES),
+        }
+        # labels= {'indoors_outdoors': "Stadium select"}
+
+class RecordFilterForm(forms.Form):
+    indoors_outdoors = forms.ChoiceField(
+        choices=[('indoors', 'Indoors'), ('outdoors', 'Outdoors')],
+        widget=forms.RadioSelect,
+        required=False,
+        # label='Stadium',
+    )
 
 
 class UserSignupForm(SignupForm):
@@ -45,7 +63,7 @@ class RecordForm(forms.ModelForm):
         label='Performance',
         max_length=12,
         required=True,
-        help_text="Enter performance in the format 'mm:ss.ss'"
+        help_text="Enter performance in the format 'mm:ss.ss' for road events or 'mm.cc' for field events."
     )
 
 
@@ -78,7 +96,7 @@ class RecordForm(forms.ModelForm):
 
         try:
             if not match:
-                time_pattern = re.compile(r'(?P<seconds>\d{1,3}(\.\d{1,3})?)$')
+                time_pattern = re.compile(r'(?P<seconds>\d{1,4}(\.\d{1,3})?)$')
                 match = time_pattern.match(performance_str)
 
                 total_seconds = float(match.group("seconds"))
@@ -86,7 +104,7 @@ class RecordForm(forms.ModelForm):
             pass
 
         if not match:
-            raise forms.ValidationError("Invalid time format. Expected 'mm:ss.ss'")
+            raise forms.ValidationError("Invalid format. Expected 'mm:ss.ss' for road events and 'mm.cc' for field evends.")
 
         # Convert to total seconds
         # hours = float(match.group("hours"))
@@ -105,14 +123,17 @@ class RecordForm(forms.ModelForm):
                   'ranking',
                   'venue',
                   'wind',
-                  'record_date', ]
+                  'record_date',
+                  'progression',]
         widgets = {  # 'stadium': forms.RadioSelect(),
             'record_date': forms.SelectDateWidget(years=range(2003, datetime.datetime.now().year + 1)),
         }
         help_texts = {
             'venue': "If your desired Venue doesn't appear on the list contact admin.",
+            'discipline': 'Note:First select Stadium',
             'wind' : "Legal values are between -2.0 to +2.0",
             'ranking' : mark_safe("Follow this link to calculate <a href='https://caltaf.com/pointscalc/calc.html'>ranking</a>"),
+            'progression' : "How many times the record has been broken."
         }
 
 class GoalForm(forms.ModelForm):
@@ -120,13 +141,13 @@ class GoalForm(forms.ModelForm):
         label='Performance',
         max_length=12,
         required=True,
-        help_text="Enter performance in the format 'mm:ss.ss'"
+        help_text="Enter performance in the format 'mm:ss.ss' for road events or 'mm.cc' for field events."
     )
     current_record = forms.CharField(
         label='Current Record(Optional)',
         max_length=12,
         required=True,
-        help_text="Enter performance in the format 'mm:ss.ss'"
+        help_text="Enter performance in the format 'mm:ss.ss' for road events or 'mm.cc' for field events."
     )
 
     def __init__(self, *args, **kwargs):
@@ -156,7 +177,7 @@ class GoalForm(forms.ModelForm):
             pass
         try:
             if not match:
-                time_pattern = re.compile(r'(?P<seconds>\d{1,3}(\.\d{1,3})?)$')
+                time_pattern = re.compile(r'(?P<seconds>\d{1,4}(\.\d{1,3})?)$')
                 match = time_pattern.match(performance_str)
 
                 total_seconds = float(match.group("seconds"))
@@ -164,7 +185,7 @@ class GoalForm(forms.ModelForm):
             pass
 
         if not match:
-            raise forms.ValidationError("Invalid time format. Expected 'hh:mm:ss.ss'")
+            raise forms.ValidationError("Invalid format. Expected 'mm:ss.ss' for road events and 'mm.cc' for field evends.")
 
         # Convert to total seconds
         # hours = float(match.group("hours"))
@@ -185,7 +206,7 @@ class GoalForm(forms.ModelForm):
 
         try:
             if not match:
-                time_pattern = re.compile(r'(?P<seconds>\d{1,2}(\.\d{1,3})?)$')
+                time_pattern = re.compile(r'(?P<seconds>\d{1,4}(\.\d{1,3})?)$')
                 match = time_pattern.match(current_record_str)
 
                 total_seconds = float(match.group("seconds"))

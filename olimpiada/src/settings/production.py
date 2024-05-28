@@ -27,9 +27,9 @@ TEMPLATE_DIR = BASE_DIR / 'templates'
 SECRET_KEY = 'django-insecure-8nq!$#za4d&)v6wi0fx#p2$olk)t95=21tu&sfvz6=qa))(v0m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [' https://olimpiada-record-app-08a7817312bb.herokuapp.com/', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [' https://olimpiada-record-app-08a7817312bb.herokuapp.com/', 'localhost', '127.0.0.1', '*']
 
 
 # Application definition
@@ -44,10 +44,16 @@ INSTALLED_APPS = [
     'records',
     'allauth',
     'allauth.account',
+    'rest_framework',
     # 'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
+    'UNAUTHENTICATED_USER': None,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -117,13 +123,26 @@ ACCOUNT_FORMS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+#### yugabyte
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'yugabyte',  # Replace with your database name
+        'USER': 'admin',  # Replace with your database user
+        'PASSWORD': 'gytLvV2wBDK82OIkZw3E0CR3rB0TFo',  # Replace with your database password
+        'HOST': 'eu-west-2.83699086-2f3e-4d40-9972-42ac151b6470.aws.ybdb.io',  # Or your YugabyteDB cluster IP
+        'PORT': '5433',  # Default port for YugabyteDB YSQL API
     }
 }
-
+#### sqlite3
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+#
+#
 import dj_database_url
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)

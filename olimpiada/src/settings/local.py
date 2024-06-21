@@ -116,10 +116,21 @@ ACCOUNT_FORMS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_yugabytedb',
+        'NAME': 'yugabyte',
+        'HOST': 'eu-west-2.83699086-2f3e-4d40-9972-42ac151b6470.aws.ybdb.io',
+        'PORT': 5433,
+        'USER': 'admin',
+        'PASSWORD': 'gytLvV2wBDK82OIkZw3E0CR3rB0TFo',
     }
 }
 

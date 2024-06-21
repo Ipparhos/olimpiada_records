@@ -9,8 +9,8 @@ User = settings.AUTH_USER_MODEL
 # USERNAME_REGEX = '^[a-zA-Z0-9_@.+-]'
 
 road_disciplines = ['60m', '60m Hurdles', '100m', '100m Hurdles', '110m Hurdles', '110m/100m Hurdles', '200m', '400m',
-                    '400m Hurdles', '800m', '1500m', '3000m', '3000m Steeplechase', '5000m', '10000m', '4 x 100m Relay',
-                    '4 x 400m Relay',]
+                    '300m', '400m Hurdles', '800m', '1500m', '3000m', '3000m Steeplechase', '5000m', '10000m', '1000m',
+                    '4 x 100m Relay', '4 x 400m Relay',]
 field_disciplines = ['Long Jump', 'Triple Jump', 'High Jump', 'Pole Vault', 'Javelin Throw', 'Shot Put',
                      'Hammer Throw', 'Discus Throw']
 
@@ -71,6 +71,17 @@ class Discipline(models.Model):
 class AgeGroup(models.Model):
     age_group = models.CharField(max_length=10)
 
+    # AGE_GROUP_CHOICES = [
+    #     ('men', 'Men'),
+    #     ('women', 'Women'),
+    #     ('menU20', 'MenU20'),
+    #     ('womenU20', 'WomenU20'),
+    # ]
+    # age_groups = models.CharField(
+    #     max_length=8,
+    #     choices=AGE_GROUP_CHOICES,
+    #     default='men'
+    # )
     def __str__(self):
         return self.age_group
 
@@ -128,7 +139,7 @@ class Record(models.Model):
         return performance_formatted_str
 
     def __str__(self):
-        return self.holder.__str__()
+        return f"{self.discipline} {self.age_group} {self.holder.__str__()}"
 
     def get_wind_display(self):
         return '' if self.wind is None else str(self.wind)
@@ -149,7 +160,7 @@ class Record(models.Model):
         # ordering = ['age_group', 'performance']
         # verbose_name = ''  # How admin sees the name for single obj
         # verbose_name_plural = 'Records' # How admin sees the name for multiple objs
-        unique_together = [['holder', 'discipline', 'performance']]
+        unique_together = [['holder', 'discipline', 'performance', 'age_group']]
         db_table = 'Olimpiada records'
 
 

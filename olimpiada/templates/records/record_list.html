@@ -12,8 +12,18 @@
            <!--    {{ record_list }}-->
 
         <form id="filter-form" method="get">
-    {{ filter_form.as_p }}
-    </form>
+            <div class="d-flex flex-wrap justify-content-around">
+                <div class="d-inline">
+                    <p class="fw-bold">Indoors/Outdoors:</p>
+                    {{ filter_form.indoors_outdoors }}
+                 </div>
+                <div class="d-inline">
+                    <p class="fw-bold">Age Group:</p>
+                    {{ filter_form.age_group }}
+                </div>
+            </div>
+        </form>
+
          <div class="overflow-x-scroll">
 
          <table class="table table-striped">
@@ -57,7 +67,7 @@
         <h6>Tip:To find your record's ranking click 'Ranking' on records table.</h6>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const radios = document.querySelectorAll('input[name="indoors_outdoors"]');
+      const radios = document.querySelectorAll('input[name="indoors_outdoors"], input[name="age_group"]');
       radios.forEach(radio => {
         radio.addEventListener('change', function() {
           document.getElementById('filter-form').submit();

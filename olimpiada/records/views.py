@@ -13,12 +13,8 @@ from .models import Record, Discipline, Goal, road_disciplines
 User = get_user_model()
 # Create your views here.
 
-class LoginRequiredMixin(object):
-    # @classmethod
-    # def as_view(cls, **initkwargs):
-    #     view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-    #     return login_required(view)
 
+class LoginRequiredMixin(object):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
@@ -61,7 +57,8 @@ class RecordListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter_form'] = RecordFilterForm(self.request.GET)
+        context['filter_form'] = RecordFilterForm(self.request.GET or
+                                                  {'indoors_outdoors': 'outdoors', 'age_group': 'Men'})
         context['title'] = 'Records'
         return context
 
@@ -72,11 +69,16 @@ class RecordListView(ListView):
                 default=Value('field'),
                 output_field=CharField()
             )
-        ).order_by('age_group__age_group', 'discipline_type', 'performance')
+        ).order_by('age_group__age_group', '-discipline_type', 'performance')
 
         indoors_outdoors = self.request.GET.get('indoors_outdoors')
         if indoors_outdoors:
             queryset = queryset.filter(discipline__stadium__indoors_outdoors=indoors_outdoors)
+
+        age_group = self.request.GET.get('age_group')
+
+        if age_group:
+            queryset = queryset.filter(age_group__age_group=age_group)
 
         return queryset
 
@@ -203,19 +205,3 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return "/goals/"
 
-
-def records_view(request):
-    filter_form = RecordFilterForm(request.GET)
-    records = Record.objects.annotate(
-        discipline_type=Case(
-            When(discipline__name__in=road_disciplines, then=Value('road')),
-            default=Value('field'),
-            output_field=CharField()
-        )
-    ).order_by('age_group__age_group', 'discipline_type', 'performance')
-
-    indoors_outdoors = request.GET.get('indoors_outdoors')
-    if indoors_outdoors:
-        records = records.filter(discipline__stadium__indoors_outdoors=indoors_outdoors)
-
-    return render(request, 'records/records_list.html', {'records': records, 'filter_form': filter_form})

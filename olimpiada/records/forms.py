@@ -8,7 +8,7 @@ from django.core.validators import RegexValidator
 from django.db.models import Q
 import re
 
-from .models import Record, Discipline, Athlete, Goal, Stadium
+from .models import Record, Discipline, Athlete, Goal, Stadium, AgeGroup
 from allauth.account.forms import SignupForm
 import datetime
 
@@ -22,15 +22,42 @@ class StadiumForm(forms.ModelForm):
         widgets = {
             'indoors_outdoors': forms.RadioSelect(choices=Stadium.INDOORS_OUTDOORS_CHOICES),
         }
-        # labels= {'indoors_outdoors': "Stadium select"}
+
+# class AgeGroupForm(forms.ModelForm):
+#     class Meta:
+#         model = AgeGroup
+#         fields = ['age_group', 'age_groups']
+#         widgets = {
+#             'age_groups': forms.RadioSelect(choices=AgeGroup.AGE_GROUP_CHOICES),
+#         }
 
 class RecordFilterForm(forms.Form):
     indoors_outdoors = forms.ChoiceField(
         choices=[('indoors', 'Indoors'), ('outdoors', 'Outdoors')],
         widget=forms.RadioSelect,
         required=False,
-        # label='Stadium',
+        label='Stadium',
+        initial='outdoors',
     )
+
+    AGE_GROUP_CHOICES = [
+        ('Men', 'Men'),
+        ('Women', 'Women'),
+        ('MenU20', 'MenU20'),
+        ('WomenU20', 'WomenU20'),
+    ]
+
+    age_group = forms.ChoiceField(
+        choices=AGE_GROUP_CHOICES,
+        required=False,
+        widget=forms.RadioSelect,
+        initial='Men'
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['indoors_outdoors'].initial = 'outdoors'
+        self.fields['age_group'].initial = 'Men'
 
 
 class UserSignupForm(SignupForm):
@@ -58,6 +85,7 @@ class UserSignupForm(SignupForm):
 
         return user
 
+
 class RecordForm(forms.ModelForm):
     performance = forms.CharField(
         label='Performance',
@@ -65,7 +93,6 @@ class RecordForm(forms.ModelForm):
         required=True,
         help_text="Enter performance in the format 'mm:ss.ss' for road events or 'mm.cc' for field events."
     )
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -135,6 +162,7 @@ class RecordForm(forms.ModelForm):
             'ranking' : mark_safe("Follow this link to calculate <a href='https://caltaf.com/pointscalc/calc.html'>ranking</a>"),
             'progression' : "How many times the record has been broken."
         }
+
 
 class GoalForm(forms.ModelForm):
     performance = forms.CharField(
